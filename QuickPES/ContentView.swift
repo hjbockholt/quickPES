@@ -1,12 +1,14 @@
 import SwiftUI
-import UniformTypeIdentifiers  // Import for UTType
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var selectedFiles: [URL] = []
     @State private var selectedUSB: URL?
     @State private var outputMessage: String = ""
     @State private var subfolderName: String = "PES_Files"  // Default name
-    
+    @State private var isCopying: Bool = false
+    @State private var copyProgress: Double = 0.0
+
     var body: some View {
         VStack(spacing: 20) {
             Text("A utility tool to simplify the organization and transfer of .pes files for Brother embroidery systems.")
@@ -14,7 +16,7 @@ struct ContentView: View {
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
-            
+
             HStack {
                 VStack {
                     Text("Drag & Drop your files or folders here:")
@@ -92,11 +94,13 @@ struct ContentView: View {
             .padding()
 
             Button("Copy .PES Files") {
-                if let usbURL = selectedUSB {
-                    outputMessage = FileUtility.copyFiles(from: selectedFiles, to: usbURL, with: subfolderName)
-                } else {
-                    outputMessage = "Please select a valid USB directory first."
-                }
+                copyFiles()
+            }
+            .disabled(isCopying)
+
+            if isCopying {
+                ProgressView("Copying files...", value: copyProgress, total: 1.0)
+                    .frame(width: 200)
             }
 
             Text(outputMessage)
@@ -109,7 +113,6 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
         }
         .padding()
-        
     }
 
     private func showFilePicker() {
@@ -155,6 +158,51 @@ struct ContentView: View {
             if result == .OK, let url = panel.urls.first {
                 self.selectedUSB = url
             }
+        }
+    }
+
+    private func copyFiles() {
+        if let usbURL = selectedUSB {
+            isCopying = true
+            copyProgress = 0.0
+
+            DispatchQueue.global(qos: .background).async {
+                let fileManager = FileManager.default
+                let destinationURL = usbURL.appendingPathComponent(subfolderName, isDirectory: true)
+
+                do {
+                    try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
+
+                    let totalFiles = Double(selectedFiles.count)
+                    var copiedFiles = 0.0
+
+                    for fileURL in selectedFiles {
+                        let destinationFileURL = destinationURL.appendingPathComponent(fileURL.lastPathComponent)
+                        do {
+                            try fileManager.copyItem(at: fileURL, to: destinationFileURL)
+                        } catch {
+                            print("Error copying file: \(error)")
+                        }
+
+                        copiedFiles += 1.0
+                        DispatchQueue.main.async {
+                            copyProgress = copiedFiles / totalFiles
+                        }
+                    }
+
+                    DispatchQueue.main.async {
+                        isCopying = false
+                        outputMessage = "Copy complete."
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        isCopying = false
+                        outputMessage = "Error creating destination directory: \(error)"
+                    }
+                }
+            }
+        } else {
+            outputMessage = "Please select a valid USB directory first."
         }
     }
 }
