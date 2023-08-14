@@ -42,7 +42,3 @@ This project is licensed under the GNU Affero General Public License v3.0. For m
 
 For any queries, suggestions, or support related to `QuickPES`, please reach out via the [GitHub issues page](https://github.com/hjbockholt/quickPES/issues) or contact the maintainers directly.
 
----
-
-You can now add this to your `README.md` in the root directory of your GitHub project. Adjustments might be needed based on specific project intricacies or additional sections you might want to include later.
-
