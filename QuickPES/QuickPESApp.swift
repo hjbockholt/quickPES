@@ -7,8 +7,8 @@ struct QuickPESApp: App {
             ContentView()
         }
         .commands {
-            CommandMenu("Help") {
-                Button("QuickPES User Guide") {
+            CommandMenu("QuickPES Help") {  // Renamed menu here
+                Button("User Guide") {
                     // Open the User Guide view
                     openUserGuide()
                 }
@@ -20,7 +20,7 @@ struct QuickPESApp: App {
     func openUserGuide() {
         // Logic to open a new window with the UserGuideView
         let userGuideWindow = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: 600, height: 500),
             styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
             backing: .buffered, defer: false)
         userGuideWindow.center()
