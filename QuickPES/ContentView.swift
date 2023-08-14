@@ -9,6 +9,16 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            Text("QuickPES")
+                .font(.title)
+                .padding(.top)
+            
+            Text("A utility tool to simplify the organization and transfer of .pes files for Brother embroidery systems.")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
             Text("Drag & Drop your files or folders here:")
                 .onDrop(of: [UTType.fileURL.identifier], isTargeted: nil) { providers in
                     _ = providers.first?.loadObject(ofClass: URL.self) { url, error in
