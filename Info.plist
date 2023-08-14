@@ -1,0 +1,5 @@
+<key>NSDownloadsUsageDescription</key>
+<string>We need access to your Downloads folder to copy files.</string>
+<key>NSRemovableVolumesUsageDescription</key>
+<string>We need access to removable volumes (USB drives) to copy files.</string>
+
