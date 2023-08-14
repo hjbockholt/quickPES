@@ -101,8 +101,15 @@ struct ContentView: View {
 
             Text(outputMessage)
                 .foregroundColor(.red)
+                .padding(.bottom, 20) // Add some bottom padding
+
+            Text("When you click the 'Copy .PES Files' button, the selected .pes files will be copied to the chosen USB directory, organized under the subfolder you've specified. Make sure to select a valid USB directory before copying.")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
         }
         .padding()
+        
     }
 
     private func showFilePicker() {
